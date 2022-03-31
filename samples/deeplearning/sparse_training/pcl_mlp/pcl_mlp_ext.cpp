@@ -30,6 +30,7 @@
 void BlockSpMatStep1(int K, int C, int KB, int CB, unsigned int *colptr,
         unsigned int *rowidx, unsigned int *b_colptr[],
         int *nnzb) {
+    printf("\nBLOCKSPMATSTEP1\n");
     int num_blocks = K / KB * C / CB;
     int blk_idx, i, k;
 
@@ -58,17 +59,21 @@ void BlockSpMatStep1(int K, int C, int KB, int CB, unsigned int *colptr,
     for (blk_idx = 0; blk_idx < num_blocks; ++blk_idx) {
         for (i = 0; i < KB; ++i) {
             b_colptr[blk_idx][i + 1] += b_colptr[blk_idx][i];
+            printf("%lf ", b_colptr[blk_idx][i + 1]);
         }
     }
+    printf("\nBLOCKSPMATSTEP1 <-- END\n\n");
 }
 
 void BlockSpMatStep2(int K, int C, int KB, int CB, unsigned int *colptr,
         unsigned int *rowidx, float *values,
         unsigned int *b_colptr[], unsigned int *b_rowidx[],
         float *b_values[]) {
+    printf("BLOCKSPMATSTEP2\n");
     int num_blocks = K / KB * C / CB;
     int blk_idx, k, i;
 
+    printf("--> STEP 1\n");
     int n_em = 0;
     for (k = 0; k < K; ++k) {
         int k_blk_idx = k / KB;
@@ -83,16 +88,20 @@ void BlockSpMatStep2(int K, int C, int KB, int CB, unsigned int *colptr,
             blk_idx = k_blk_idx * C / CB + c_blk_idx;
             b_rowidx[blk_idx][b_colptr[blk_idx][k_blk_offset]] = c_blk_offset;
             b_values[blk_idx][b_colptr[blk_idx][k_blk_offset]] = values[i];
+            printf("%lf ", values[i]);
             b_colptr[blk_idx][k_blk_offset]++;
         }
     }
 
+    printf("\n--> STEP 2\n");
     for (blk_idx = 0; blk_idx < num_blocks; ++blk_idx) {
         for (i = KB; i > 0; --i) {
             b_colptr[blk_idx][i] = b_colptr[blk_idx][i - 1];
+            printf("%lf ", b_colptr[blk_idx][i]);
         }
         b_colptr[blk_idx][0] = 0;
     }
+    printf("\nBLOCKSPMATSTEP2 <-- END\n\n");
 }
 
 
@@ -787,6 +796,8 @@ at::Tensor mlp_sparse_update(
     torch::Tensor input,
     torch::Tensor weight)
 {
+  printf("█████████ C-FILE █████████");
+
   libxsmm_dnn_err_t global_status;
 
   auto nbn = input.size(0);
@@ -808,7 +819,7 @@ at::Tensor mlp_sparse_update(
 
   int nb = 16; // or 32
 
-  printf("\n\n mlp sparse update \n\n");
+  printf("\n\n mlp_sparse_update \n\n");
   printf("input shape: (%d, %d)\n", N, C);
   printf("weight shape: (%d, %d)\n", C, K);
   printf("grad_output shape: (%d, %d)\n", N, K);
@@ -855,6 +866,7 @@ at::Tensor mlp_sparse_update(
   }
 
   /* touch l_grad_output */
+  printf("touch l_grad_output\n");
   for (int l_n = 0; l_n < N / NB; ++l_n) {
       for (int l_k = 0; l_k < K / KB; ++l_k) {
           for (int l_nn = 0; l_nn < NB / nb; ++l_nn) {
@@ -866,11 +878,16 @@ at::Tensor mlp_sparse_update(
                       LIBXSMM_VLA_ACCESS(5, l_p_grad_output, l_n, l_k, l_nn, l_kk,
                               l_nnn, K / KB, NB / nb, KB, nb) =
                               (float)grad_output[i][j].item().to<float>();
+                      printf("%lf ", (float)grad_output[i][j].item().to<float>());
                   }
               }
           }
       }
   }
+  printf("\ntouch l_grad_output <--- END\n");
+
+  //printf("C-FILE\n");
+  //printf("%lf", l_p_grad_output[0]);
 
   /* touch C */
   for (int k = 0; k < K; ++k) {
@@ -888,6 +905,7 @@ at::Tensor mlp_sparse_update(
 
   colptr[0] = 0;
 
+  printf("SPARSE C\n");
   for (int l_k = 0; l_k < K; l_k++) {
       colptr[l_k + 1] = 0;
       for (int l_c = 0; l_c < C; l_c++) {
@@ -904,8 +922,10 @@ at::Tensor mlp_sparse_update(
               colptr[l_k + 1]++;
           }
           l_C[l_k * C + l_c] = (float)tmp;
+          printf("%lf ", (float)tmp);
       }
   }
+  printf("\nSPARSE C <-- END\n");
 
   for (int l_k = 0; l_k < K; l_k++) {
       colptr[l_k + 1] += colptr[l_k];
@@ -942,7 +962,9 @@ at::Tensor mlp_sparse_update(
               (KB + 1) * sizeof(unsigned int), 64);
   }
 
+  printf("\n████████████████████ UPDATE ████████████████████\n");
   BlockSpMatStep1(K, C, KB, CB, colptr, rowidx, c_colptr, nnzb);
+  printf("████████████████████████████████████████████████\n");
 
   // Init c_rowidx, c_values
   for (int blk_idx = 0; blk_idx < num_blocks; ++blk_idx) {
@@ -952,7 +974,9 @@ at::Tensor mlp_sparse_update(
           (float *)libxsmm_aligned_malloc(nnzb[blk_idx] * sizeof(float), 64);
   }
 
+  printf("\n████████████████████ UPDATE ████████████████████\n");
   BlockSpMatStep2(K, C, KB, CB, colptr, rowidx, values, c_colptr, c_rowidx, c_values);
+  printf("████████████████████████████████████████████████\n");
 
   // Update kernels
   float alpha = 1.0;
@@ -965,6 +989,9 @@ at::Tensor mlp_sparse_update(
   libxsmm_smmfunction *upd_kernel = (libxsmm_smmfunction *)libxsmm_aligned_malloc(
           num_blocks * sizeof(libxsmm_smmfunction), 64);
 
+  printf("\n████████████████████ UPDATE KERNELS ████████████████████\n");
+  // COULD BE HERE!
+  printf("NUMBER OF BLOCKS: %d\n", num_blocks);
   for (int blk_idx = 0; blk_idx < num_blocks; ++blk_idx) {
       l_xgemm_desc[blk_idx] = libxsmm_gemm_descriptor_dinit(
               &l_xgemm_blob, LIBXSMM_DATATYPE(float), CB, KB, NB / nb, CB,
@@ -976,27 +1003,36 @@ at::Tensor mlp_sparse_update(
                   c_colptr[blk_idx],
                   c_rowidx[blk_idx],
                   (const void *)c_values[blk_idx]).smm;
+      printf("l_xgemm_dec[%d]:%lf ", blk_idx, l_xgemm_desc[blk_idx]);
+      printf("upd_kernel[%d]:%lf ", blk_idx, upd_kernel[blk_idx]);
   }
+  printf("\n████████████████████████████████████████████████████████\n");
 
+printf("\n████████████████████ UPDATING USING OMP ████████████████████\n");
 int k, n, c;
-#ifdef _OPENMP
-#   pragma omp parallel for LIBXSMM_OPENMP_COLLAPSE(2) private(k,n,c)
-#endif
+//#ifdef _OPENMP
+//#   pragma omp parallel for LIBXSMM_OPENMP_COLLAPSE(2) private(k,n,c)
+//#endif
   for (k = 0; k < K / KB; ++k) {
       for (c = 0; c < C / CB; ++c) {
           for (n = 0; n < N / NB; ++n) {
               if (c_values[k * C/CB + c] != NULL) {
+                  printf("input: %f, grad: %f, val: %f \n", l_input[(n * C / CB + c) * CB * NB], l_grad_output[(n * K / KB + k) * KB * NB], c_values[k * C / CB + c]);
                   upd_kernel[k * C / CB + c](
                           &(l_input[(n * C / CB + c) * CB * NB]),
                           &(l_grad_output[(n * K / KB + k) * KB * NB]),
                           c_values[k * C / CB + c]);
+                  printf("input: %f, grad: %f, val: %f\n", l_input[(n * C / CB + c) * CB * NB], l_grad_output[(n * K / KB + k) * KB * NB], c_values[k * C / CB + c]);
+                  printf("upd_kernel:%lf\n", upd_kernel[k * C / CB + c]);
               }
           }
       }
   }
+printf("\n████████████████████████████████████████████████████████████\n");
 
   auto grad_weight_temp = grad_weight.permute({1, 2, 0, 3}).reshape({C,K});
 
+  printf("\n████████████████████ Converting to Grad Weight ████████████████████\n");
   /* Convert back to grad_weight */
   int l_cc;
   for (int l_k = 0; l_k < K/KB; ++l_k) {
@@ -1010,11 +1046,14 @@ int k, n, c;
                   l_cc = c_rowidx[blk_idx][i];
                   c = l_c * CB + l_cc;
                   grad_weight_temp.index_put_({c, k}, c_values[blk_idx][i]);
+                  printf("%lf ", c_values[blk_idx][i]);
               }
           }
       }
   }
+  printf("\n███████████████████████████████████████████████████████████████████\n");
 
+  printf("██████████████████████████");
   return grad_weight_temp.reshape({nbc, bc, nbk, bk}).permute({2, 0, 1, 3});
 }
 

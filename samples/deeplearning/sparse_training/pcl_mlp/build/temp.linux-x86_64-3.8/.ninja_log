@@ -1,0 +1,20 @@
+# ninja log v5
+2	20912	1648678706239252100	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+40	29090	1648747512381588700	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+39	28479	1648747670134202600	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+42	29151	1648747842005861400	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+43	27970	1648747957748308500	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+42	28399	1648748179958904800	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+36	33229	1648748458507467300	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+44	27235	1648754487123003500	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+41	25525	1648754753390669400	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+29	25435	1648754824409052300	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+28	26872	1648755163613798500	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+27	24065	1648755465731492200	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+45	32761	1648755875073294800	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+29	25556	1648756531355433800	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+49	32401	1648756709269434600	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+48	29886	1648759592416574000	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+44	27216	1648760077485315700	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+103	41483	1648764151885688400	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
+107	42358	1648764339219809400	/mnt/c/Users/cpenk/Documents/School/UO/2022_1_Winter/CIS_503_Thesis/libxsmm_2.0/samples/deeplearning/sparse_training/pcl_mlp/build/temp.linux-x86_64-3.8/pcl_mlp_ext.o	3fe62e3a5a9d3826
